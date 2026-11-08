@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>מתרגלים שטף קריאה</title>
+<style>
+:root{--bg:#fbf8f1;--card:#fff;--ink:#23262b;--mute:#6b7078;--line:#e6dfcf;--acc:#2f7d6d;--acc2:#e9f4f1;--warn:#f4b942;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--rb:#fffdf5}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#17191c;--card:#22262b;--ink:#eceae4;--mute:#a1a6ad;--line:#394047;--acc:#5cc4af;--acc2:#1f3530;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#17191c;--card:#22262b;--ink:#eceae4;--mute:#a1a6ad;--line:#394047;--acc:#5cc4af;--acc2:#1f3530;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Heebo","Assistant",Arial,sans-serif;line-height:1.6}
+.wrap{max-width:880px;margin:0 auto;padding:18px 16px 40px}
+h1{font-size:1.9rem;margin:.2em 0 0}
+.by{color:var(--mute);margin:0 0 14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin:14px 0}
+h2{font-size:1.15rem;margin:0 0 10px}
+.chips,.tabs,.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+button,select,textarea,input{font:inherit;color:inherit}
+.chip,.tab,.btn{border:1.5px solid var(--line);background:var(--card);border-radius:12px;padding:8px 16px;cursor:pointer;min-height:44px}
+.chip{min-width:52px;font-weight:700;font-size:1.1rem}
+.chip.on,.tab.on{background:var(--acc);border-color:var(--acc);color:#fff}
+.btn.main{background:var(--acc);border-color:var(--acc);color:#fff;font-weight:700}
+.btn:active,.chip:active{transform:scale(.97)}
+.read{background:var(--rb);color:#1d1d1f;border-radius:14px;padding:18px 20px;font-size:var(--fs,28px);line-height:var(--lh,2);min-height:150px;border:1px solid var(--line)}
+.read span{padding:0 .12em;border-radius:6px;transition:background .1s}
+.read span.cur{background:var(--warn)}
+.read span.done{opacity:.8}
+.read.focus span:not(.cur){opacity:.3}
+.read.tap span{cursor:pointer}
+.read span.end{outline:3px solid var(--acc)}
+.sw{width:34px;height:34px;border-radius:50%;border:2px solid var(--line);cursor:pointer;padding:0}
+.sw.on{border-color:var(--acc);box-shadow:0 0 0 2px var(--acc)}
+.big{font-size:2.2rem;font-weight:700;text-align:center}
+.flash{background:var(--rb);color:#1d1d1f;border-radius:18px;text-align:center;font-size:calc(var(--fs,28px)*2);padding:44px 10px;min-height:190px;border:1px solid var(--line)}
+.mute{color:var(--mute);font-size:.92rem}
+.bar{height:14px;border-radius:7px;background:var(--acc);min-width:4px}
+.hist{display:grid;grid-template-columns:110px 1fr 60px;gap:6px 10px;align-items:center}
+table{border-collapse:collapse;width:100%}
+td,th{border-bottom:1px solid var(--line);padding:6px 8px;text-align:right}
+textarea{width:100%;min-height:80px;border-radius:10px;border:1.5px solid var(--line);background:var(--card);padding:8px}
+input[type=number]{width:70px;border-radius:8px;border:1.5px solid var(--line);background:var(--card);padding:6px}
+input[type=range]{accent-color:var(--acc)}
+.hide{display:none!important}
+:root{--hero:#2f7d6d}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--hero:#24574c}}
+:root[data-theme="dark"]{--hero:#24574c}
+body{font-size:18px}
+.wrap{max-width:980px}
+.hero{background:var(--hero);color:#fff;border-radius:20px;padding:18px 20px;margin-bottom:6px}
+.hero h1{color:#fff;margin:0}
+.hero .by{color:#dff0ec;margin:4px 0 12px}
+.tools{display:flex;flex-wrap:wrap;gap:8px}
+.tools .btn,.tools .nm{background:#fff;color:#23262b;border:0;border-radius:12px;min-height:48px;padding:8px 14px}
+.tools .nm{flex:1;min-width:160px}
+.btn{min-height:52px;font-size:1.05rem}
+.chip{min-height:52px;min-width:58px}
+.tabs{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin:14px 0}
+.tab{min-height:60px;font-size:1.05rem;font-weight:700}
+.card{border-radius:18px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+h2{font-size:1.3rem}
+:focus-visible{outline:3px solid #1b6fd6;outline-offset:2px}
+@media (max-width:560px){.tabs{grid-template-columns:repeat(2,1fr)}.hist{grid-template-columns:90px 1fr 44px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+#projX{display:none;position:fixed;bottom:calc(14px + env(safe-area-inset-bottom,0px));left:14px;z-index:9}
+body.proj #projX{display:block}
+body.proj .wrap{max-width:1400px}
+body.proj .wrap>div:not(#pStu):not(#tabs){display:none!important}
+body.proj .mute{display:none}
+body.proj .read{font-size:max(var(--fs),46px)}
+body.proj .flash{font-size:clamp(80px,14vw,200px)}
+body.proj .btn{min-height:64px;font-size:1.3rem}
+.sp{padding:6px 12px;border-radius:999px;border:1.5px solid var(--line);font-size:.95rem}.sp.on{background:var(--acc);color:#fff;border-color:var(--acc)}.sp.ok{background:var(--acc2)}
+.gch{font-size:calc(var(--fs)*1.1);min-width:110px}.btn.good{background:#cfe9e2;border-color:var(--acc);color:#1d1d1f}.btn.try{opacity:.4}
+.read span.hard{background:#f9d3cb;outline:2px solid #E2674D}
+#printSheet{display:none}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#FBF8F1;--card:#FFFFFF;--ink:#23262B;--mute:#5F646C;--line:#E6DFCF;--acc:#2F7D6D;--acc2:#E9F4F1;--hero:#2F7D6D;color-scheme:light}}
+body{background:linear-gradient(#FFF1D0,#FBF8F1 340px) no-repeat,#FBF8F1}
+.hero{background:none;text-align:center;padding:14px 8px 4px}
+.hero h1{font-size:2.9rem;font-weight:900;line-height:1.2;background:linear-gradient(90deg,#E2674D,#E08A00,#2F9E6B,#3F7CC8,#7A5AE0);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero .by{color:var(--mute);font-size:1.1rem}
+.tools{justify-content:center}
+.tools .btn,.tools .nm{background:#fff;color:var(--ink);border:2px solid var(--line);box-shadow:0 4px 0 rgba(0,0,0,.06)}
+.card{position:relative;overflow:hidden;border-radius:28px;border:2px solid #efe6d2;box-shadow:0 6px 0 rgba(120,90,30,.07)}
+.card::before{content:'';position:absolute;inset:0 0 auto 0;height:7px;background:linear-gradient(90deg,#E2674D,#F2B134,#2F9E6B,#3F7CC8,#7A5AE0)}
+.card:has(#grades){text-align:center}.card:has(#grades) .row{justify-content:center}
+#grades{justify-content:center;gap:14px}
+.btn{border-radius:16px;border:2.5px solid var(--line);box-shadow:0 4px 0 rgba(0,0,0,.08);font-weight:700}
+.btn.main{box-shadow:0 4px 0 #1f5c50}
+.btn:active{transform:translateY(3px);box-shadow:none}
+.gt{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:112px;padding:14px 12px;border-radius:22px;background:var(--gb);border:3px solid var(--gb);color:var(--ink);box-shadow:0 5px 0 rgba(0,0,0,.08);transition:transform .12s}
+.gt b{font-size:2.3rem;line-height:1.1;color:var(--gc)}.gt small{font-size:1rem;font-weight:500}
+.gt:hover{transform:translateY(-3px)}.gt.on{background:var(--gc);border-color:var(--gc);color:#fff}.gt.on b{color:#fff}
+.g0{--gc:#2F9E6B;--gb:#E3F5EC}.g1{--gc:#3F7CC8;--gb:#E4EEFA}.g2{--gc:#E2674D;--gb:#FCE8E2}.g3{--gc:#7A5AE0;--gb:#ECE6FB}.g4{--gc:#C77700;--gb:#FDF0D3}.g5{--gc:#D6478B;--gb:#FBE5EF}
+.tab{--tc:#2F7D6D;border:3px solid var(--tc);color:var(--tc);background:#fff;border-radius:18px;box-shadow:0 4px 0 rgba(0,0,0,.07)}
+.tab:nth-child(7n+1){--tc:#E2674D}.tab:nth-child(7n+2){--tc:#C77700}.tab:nth-child(7n+3){--tc:#2F9E6B}.tab:nth-child(7n+4){--tc:#3F7CC8}.tab:nth-child(7n+5){--tc:#7A5AE0}.tab:nth-child(7n+6){--tc:#D6478B}
+.tab.on{background:var(--tc);color:#fff}
+@media print{body{background:#fff;color:#000}.wrap>*:not(#printSheet),#projX{display:none!important}#printSheet{display:block!important}}
+ul{padding-inline-start:20px;margin:6px 0}
+footer{text-align:center;color:var(--mute);margin-top:26px;font-size:.9rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hero"><h1>📖 מתרגלים שטף קריאה</h1>
+  <p class="by">תרגול קצר, ברור ומותאם לילדים עם לקויות למידה והפרעות קשב · כיתות א’–ו’</p>
+  <div class="tools"><input id="sname" class="nm" placeholder="👤 שם התלמיד/ה" aria-label="שם התלמיד/ה"><button class="btn" id="bProj">📽 מצב הקרנה ללוח</button><button class="btn" id="bPrint">🖨 דף עבודה להדפסה</button></div></div>
+
+  <div class="card">
+    <h2>איזו רמת כיתה אתם מתרגלים?</h2>
+    <div class="chips" id="grades"></div>
+    <div class='row' style='margin-top:12px'><b>רמה:</b><button class='chip on' id='lvE'>קל</button><button class='chip' id='lvH'>קשה</button><button class='chip' id='nqBtn' style='font-size:1rem'>✨ הוספת ניקוד לטקסט</button><span class='mute' id='nqMsg'></span><span class='mute' id='lvNote'></span></div>
+    <div class='row' style='margin-top:10px'><button class='btn' id='cpOpen'>✏️ הדבקת טקסט משלי</button></div>
+    <div id='cpBox' class='hide' style='margin-top:10px'><div id='cpList' style='margin-bottom:12px'></div><label class='row' style='margin-bottom:8px'>הטקסט מיועד ל: <select id='cpGrade' style='padding:8px;border-radius:10px;border:1.5px solid var(--line);background:var(--card)'></select></label><input id='cpTitle' placeholder='שם לטקסט (לא חובה)' style='width:100%;margin-bottom:8px;padding:8px;border-radius:10px;border:1.5px solid var(--line);background:var(--card)'><textarea id='cust2' placeholder='הדביקו כאן את הטקסט. אפשר גם עם ניקוד.'></textarea><div class='row' style='margin-top:8px'><button class='btn main' id='cpUse'>השתמש בטקסט הזה</button><button class='btn' id='cpOff'>חזרה לטקסט הכיתה</button><button class='btn' id='cpX'>סגירה</button></div><p class='mute' id='cpMsg'></p></div>
+    <p class="mute" style="margin:10px 0 0">האתר זוכר את הבחירה. אפשר להחליף בכל רגע.</p>
+    <div class="row" style="margin-top:10px">
+      <button class="chip on" id="mStu" style="font-size:1rem">תלמיד/ה</button>
+      <button class="chip" id="mAdu" style="font-size:1rem">הורה / מורה</button>
+    </div>
+  </div>
+
+  <div class="tabs" id="tabs"></div>
+
+  <div id="pStu">
+    <div class='card' id='vSolo'>
+      <h2>🌟 תרגול עצמאי</h2>
+      <div class='row' id='sSteps' style='margin-bottom:10px'></div>
+      <p class='mute' id='sHelp' style='min-height:1.6em'></p>
+      <div class='read' id='rSolo'></div>
+      <div class='row' id='sBtns' style='margin-top:12px'></div>
+      <div id='sRes' class='hide' style='margin-top:14px'></div>
+      <p class='mute' style='margin-top:12px'>ההקלטה האחרונה נשמרת רק במכשיר הזה ונמחקת כשמקליטים שוב.</p>
+    </div>
+
+    <div class="card" id="vPace">
+      <h2>🎯 קוראים עם מנחה</h2>
+      <p class="mute">המילה המודגשת זזה בקצב שבוחרים. קוראים בקול יחד איתה. אפשר להתחיל לאט ולהעלות בהדרגה.</p>
+      <div class="read" id="rPace"></div>
+      <div class="row" style="margin-top:12px">
+        <button class="btn main" id="pGo">▶ התחלה</button>
+        <button class='btn' id='pNew'>🔄 טקסט חדש</button>
+        <button class='btn' id='pPrint'>🖨 הדפסת הטקסט</button>
+        <button class="btn" id="pReset">↺ מההתחלה</button>
+        <label class="row">קצב: <input type="range" id="wpm" min="20" max="150" step="5" value="45"> <b id="wpmV">45</b> מילים בדקה</label>
+      </div>
+      <label class="row" style="margin-top:8px"><input type="checkbox" id="foc" checked> מיקוד: להחשיך את שאר המילים</label>
+    </div>
+
+    <div class="card hide" id="vTime">
+      <h2>⏱ מודדים שטף</h2>
+      <p class="mute">לוחצים על התחלה וקוראים בקול. כשמסיימים לוחצים על עצור, ואז על המילה האחרונה שנקראה.</p>
+      <div class="read tap" id="rTime"></div>
+      <div class="row" style="margin-top:12px">
+        <button class="btn main" id="tGo">▶ התחלה</button>
+        <button class='btn' id='tNew'>🔄 טקסט חדש</button>
+        <button class='btn' id='tPrint'>🖨 הדפסת הטקסט</button>
+        <span class="big" id="tClock" style="font-size:1.6rem">00:00</span>
+      </div>
+      <div id="tRes" class="hide" style="margin-top:12px">
+        <p id="tMsg" class="mute"></p>
+        <div class="row">
+          <label>מילים שנקראו לא נכון: <input type="number" id="err" min="0" value="0"></label>
+          <button class="btn main" id="tSave">חשב ושמור</button>
+        </div>
+        <p class="big" id="tOut"></p>
+      </div>
+    </div>
+
+    <div class="card hide" id="vCards">
+      <h2>🃏 כרטיסיות מילים</h2>
+      <p class="mute">מילה אחת בכל פעם, בלי הסחות. מילה שהייתה קשה חוזרת בהמשך.</p>
+      <div class="flash" id="fw">—</div>
+      <div class="row" style="margin-top:12px;justify-content:center">
+        <button class="btn main" id="fOk">✓ קראתי</button>
+        <button class="btn" id="fAgain">↻ עוד פעם</button>
+        <button class="btn" id="fSay">🔊 השמעה</button><button class="btn" id="fNew">🔀 ערבוב</button>
+      </div>
+      <p class="mute" style="text-align:center" id="fCount"></p>
+    </div>
+
+    <div class='card hide' id='vWS'>
+      <h2>🖨 דף עבודה להדפסה</h2>
+      <p class='mute'>דף מיומנויות לשון לפי הכיתה והרמה: שמות עצם, פעלים, שמות תואר, שורשים, שייכות, זמנים, יחיד/רבים ועוד. אפשר להציג מפתח תשובות למורה.</p>
+      <div class='row'><button class='btn main' id='wPrint'>🖨 הדפסה</button><button class='btn' id='wNew'>🔄 דף חדש</button><button class='btn' id='wText'>📝 הטקסט בלבד</button><button class='btn' id='wFull'>✏️ מיומנויות לשון</button><button class='btn' id='wRead'>📖 תרגילי קריאה</button><button class='btn' id='wKey'>🔑 מפתח תשובות</button><button class='btn' id='wWin'>📄 פתיחה בחלון חדש</button></div>
+      <p class='mute' id='wMsg'>לשמירה כקובץ PDF: בחלון ההדפסה בוחרים "שמירה כ־PDF".</p>
+      <div id='wsView' style='background:#fff;color:#000;border:1px solid var(--line);border-radius:12px;padding:20px;margin-top:12px;overflow-x:auto'></div>
+    </div>
+
+    <div class='card hide' id='vGames'>
+      <h2>🎮 משחקי קריאה</h2>
+      <div class='row' id='gTabs' style='margin-bottom:10px'></div>
+      <p class='mute' id='gHelp'></p>
+      <p class='big' id='gScore' style='font-size:1.3rem'></p>
+      <div id='gArea'></div>
+    </div>
+
+    <div class="card hide" id="vHist">
+      <h2>📈 ההתקדמות שלי</h2>
+      <div id="hist"></div>
+      <button class="btn" id="hClr" style="margin-top:10px">נקה היסטוריה</button>
+    </div>
+  </div>
+
+  <div id="pAdu" class="hide">
+    <div class='card'><h2>🎙 קריאה לדוגמה של המורה</h2>
+      <p class='mute'>בוחרים כיתה (או טקסט משלכם) בראש הדף, ומקליטים קריאה תקנית בקצב נוח. התלמידים ישמעו אותה בתרגול העצמאי, והמילה המודגשת תזוז בקצב שלכם.</p>
+      <div class='read' id='rModel' style='font-size:22px;line-height:1.8;min-height:0'></div>
+      <div class='row' style='margin-top:12px'><button class='btn main' id='mRec'>🎙 הקלטה</button><button class='btn' id='mPause' style='display:none'>⏸ השהיה</button><button class='btn' id='mPlay'>▶ האזנה</button><button class='btn' id='mDel'>🗑 מחיקה</button><button class='btn' id='mNew'>🔄 טקסט אחר</button></div>
+      <p class='mute' id='mStat'></p></div>
+    <div class='card'><h2>📊 מעקב תלמידים</h2><div id='dash' style='overflow-x:auto'></div>
+      <p class='mute'>הנתונים נשמרים במכשיר הזה בלבד. כל תלמיד/ה מופיע/ה לפי השם שהוזן בראש הדף. כדאי להשתמש בקוד ולא בשם מלא.</p></div>
+    <div class="card">
+      <h2>🎯 יעדי שטף משוערים (מילים נכונות בדקה)</h2>
+      <table id="norms"></table>
+      <p class="mute">אלו הערכות כלליות בלבד ואינן תחליף להערכה מקצועית. לילד עם לקות למידה עדיף להשוות אותו לעצמו משבוע לשבוע.</p>
+    </div>
+    <div class="card">
+      <h2>💡 טיפים לתרגול עם קשב והפרעות למידה</h2>
+      <ul>
+        <li><b>קצר ותכוף:</b> 5–10 דקות ביום עדיפות על חצי שעה פעם בשבוע.</li>
+        <li><b>קריאה חוזרת:</b> אותו טקסט קצר 3 פעמים. השיפור שרואים מחזק מוטיבציה.</li>
+        <li><b>קריאה משותפת:</b> לקרוא יחד, ואז הילד לבד. המנחה באתר עוזר בזה.</li>
+        <li><b>פחות עומס חזותי:</b> אפשר להגדיל אותיות ומרווחים ולבחור רקע נעים (בחלק ההתאמות).</li>
+        <li><b>הפסקות תנועה:</b> אחרי כל סבב קצר, דקה של קימה, מתיחה או שתייה.</li>
+        <li><b>בחירה:</b> לתת לילד לבחור כלי (מנחה או כרטיסיות) ואת סדר המשימות.</li>
+        <li><b>חיזוק על מאמץ:</b> להתייחס להתקדמות ולא רק לדיוק או למהירות.</li>
+        <li><b>דיוק לפני מהירות:</b> אם יש הרבה טעויות, מורידים קצב ולא מאיצים.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>⚙️ התאמות קריאה</h2>
+    <div class="row">
+      <label class="row">גודל אות: <input type="range" id="fs" min="20" max="56" value="28"></label>
+      <label class="row">מרווח שורות: <input type="range" id="lh" min="14" max="30" value="20"></label>
+    </div>
+    <div class="row" style="margin-top:10px">רקע הטקסט:
+      <button class="sw on" data-c="#fffdf5" style="background:#fffdf5" aria-label="קרם"></button>
+      <button class="sw" data-c="#e8f3fb" style="background:#e8f3fb" aria-label="תכלת"></button>
+      <button class="sw" data-c="#fdf3c8" style="background:#fdf3c8" aria-label="צהבהב"></button>
+      <button class="sw" data-c="#e6f5e6" style="background:#e6f5e6" aria-label="ירקרק"></button>
+      <button class="sw" data-c="#ffffff" style="background:#fff" aria-label="לבן"></button>
+    </div>
+    <details style="margin-top:12px"><summary style="cursor:pointer">✏️ טקסט משלכם (למורים והורים)</summary>
+      <textarea id="cust" placeholder="הדביקו כאן טקסט לתרגול"></textarea>
+      <div class="row" style="margin-top:8px">
+        <button class="btn main" id="cUse">השתמש בטקסט</button>
+        <button class="btn" id="cOff">חזרה לטקסט הכיתה</button>
+      </div>
+    </details>
+  </div>
+
+  <div id="printSheet"></div>
+  <button class="btn main" id="projX">✕ יציאה ממצב הקרנה</button>
+  <footer>© מתרגלים שטף קריאה · הכלי מיועד לתרגול ואינו מהווה אבחון</footer>
+</div>
+
+<script>
+const GL=["א’","ב’","ג’","ד’","ה’","ו’"];
+const D={
+1:{t:"דָּנִי הוֹלֵךְ לַגַּן. הוּא רוֹאֶה חָתוּל קָטָן. הַחָתוּל שׁוֹתֶה חָלָב. דָּנִי מִתְחַיֵּךְ.",w:["אִמָּא","אַבָּא","סֵפֶר","גַּן","יֶלֶד","יַלְדָּה","כַּדּוּר","חָתוּל","כֶּלֶב","שֻׁלְחָן"],n:30},
+2:{t:"בבוקר יצאה נועה לגינה. היא ראתה פרח צהוב ליד הספסל. נועה התכופפה והריחה אותו. פרפר קטן עף מעל הפרח וחזר אליו שוב ושוב.",w:["גינה","פרפר","ספסל","צהוב","התכופפה","מעל","שוב","בבוקר","קטן","הריחה"],n:50},
+3:{t:"ביום שישי הלכנו לים עם סבא. הוא הראה לנו איך בונים טירה מחול רטוב. בנינו חומה גבוהה, ומסביב חפרנו תעלה. כשהגל הגיע, התעלה התמלאה במים, ואנחנו צחקנו בקול.",w:["טירה","חומה","תעלה","התמלאה","צחקנו","מסביב","חפרנו","רטוב","הגיע","בקול"],n:70},
+4:{t:"בקצה הכפר גרה משפחת ציפורים על עץ זית עתיק. כל בוקר יצא האבא לחפש זרעים, והאמא נשארה לשמור על הביצים. יום אחד התחילה רוח חזקה, והענפים נעו מצד לצד. האמא פרשה כנפיים והגנה על הקן עד שהרוח נחלשה.",w:["משפחה","עתיק","זרעים","הענפים","פרשה","כנפיים","הגנה","נחלשה","לשמור","התחילה"],n:90},
+5:{t:"כשהגענו לראש ההר, האוויר היה קר ונקי. המדריך עצר את הקבוצה ואמר שמכאן רואים את כל העמק. הוצאנו מים וכריכים, והתיישבנו על סלע גדול. לרגע לא דיברנו כלל, כי הנוף היה יפה מכדי להפריע לו במילים.",w:["המדריך","הקבוצה","העמק","התיישבנו","הוצאנו","סלע","הנוף","להפריע","במילים","כשהגענו"],n:100},
+6:{t:"המצאת הדפוס שינתה את העולם. עד אז הועתקו ספרים ביד, לאט ובמאמץ רב, ולכן רק מעטים יכלו לקנות אותם. כשהתחילו להדפיס, המחיר ירד והידע התפשט במהירות. אנשים רבים למדו לקרוא, ורעיונות חדשים עברו ממדינה למדינה.",w:["המצאה","הדפוס","הועתקו","במאמץ","התפשט","במהירות","רעיונות","מדינה","הידע","המחיר"],n:110}
+};
+const $=id=>document.getElementById(id);
+const S={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+let grade=S.get("rf_grade",2),custom=S.get("rf_custom",""),tab="vPace";
+const th=s=>[...s].reduce((a,c)=>(a*31+c.charCodeAt(0))|0,7)+'_'+s.length;
+const rawText=()=>custom||TX()[tIdx%TX().length];
+const text=()=>{const r=rawText();if(niqOn&&!/[\u05B0-\u05C7]/.test(r)){const c=nqC[th(r)];if(c)return c}return r};
+const words=()=>text().trim().split(/\s+/);
+function render(el,tap){el.innerHTML="";words().forEach((w,i)=>{const s=document.createElement("span");s.textContent=w;s.dataset.i=i;el.appendChild(s);el.appendChild(document.createTextNode(" "))})}
+function setGrade(g){grade=g;tIdx=0;applyMap();S.set("rf_grade",g);[...$("grades").children].forEach((b,i)=>b.classList.toggle("on",i+1===g));stopAll();refresh();norms()}
+function refresh(){render($('rPace'));render($('rTime'));if(window.soloReset)soloReset();if(window.lvUI)lvUI();if(window.nqUI)nqUI();if(window.wsShow){wsCache=null;if(tab==='vWS')wsShow()}pi=-1;$("rPace").classList.toggle("focus",$("foc").checked);buildCards();hist();$("tRes").classList.add("hide")}
+GL.forEach((l,i)=>{const b=document.createElement("button");b.className="chip gt g"+i;b.innerHTML="<b>"+l+"</b><small>כיתה "+l+"</small>";b.onclick=()=>setGrade(i+1);$("grades").appendChild(b)});
+// tabs
+const T=[["vSolo","🌟 תרגול עצמאי"],["vPace","🎯 מנחה"],["vTime","⏱ מדידה"],["vCards","🃏 מילים"],["vGames","🎮 משחקים"],["vWS","🖨 דף עבודה"],["vHist","📈 התקדמות"]];
+T.forEach(([id,l])=>{const b=document.createElement("button");b.className="tab";b.textContent=l;b.dataset.id=id;b.onclick=()=>showTab(id);$("tabs").appendChild(b)});
+function showTab(id){tab=id;stopAll();T.forEach(([x])=>$(x).classList.toggle("hide",x!==id));[...$("tabs").children].forEach(b=>b.classList.toggle("on",b.dataset.id===id));if(id==='vHist')hist();if(id==='vGames'){gTabs();gHead();gGo()}if(id==='vWS')wsShow()}
+function mode(adult){$("pStu").classList.toggle("hide",adult);$("tabs").classList.toggle("hide",adult);$("pAdu").classList.toggle("hide",!adult);$("mStu").classList.toggle("on",!adult);$("mAdu").classList.toggle("on",adult);S.set("rf_adult",adult)}
+$("mStu").onclick=()=>mode(false);$('mAdu').onclick=()=>{mode(true);dash();modelUI()};
+// pacer
+let pi=-1,pt=null;
+function pStop(){clearInterval(pt);pt=null;$("pGo").textContent="▶ התחלה"}
+function pMark(){const sp=$("rPace").querySelectorAll("span");sp.forEach((s,i)=>{s.classList.toggle("cur",i===pi);s.classList.toggle("done",i<pi)})}
+function pStep(){pi++;if(pi>=words().length){pStop();pi=-1;pMark();return}pMark();$("rPace").querySelectorAll("span")[pi].scrollIntoView({block:"nearest"})}
+function pRun(){clearInterval(pt);pt=setInterval(pStep,60000/$("wpm").value)}
+$("pGo").onclick=()=>{if(pt){pStop();return}$("pGo").textContent="⏸ עצירה";pStep();pRun()};
+$("pReset").onclick=()=>{pStop();pi=-1;pMark()};
+$("wpm").oninput=e=>{$("wpmV").textContent=e.target.value;if(pt)pRun()};
+$("foc").onchange=e=>$("rPace").classList.toggle("focus",e.target.checked);
+// timing
+let t0=0,tt=null,secs=0,endI=-1,running=false;
+function clock(){const s=Math.floor((Date.now()-t0)/1000);$("tClock").textContent=String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0")}
+$("tGo").onclick=()=>{
+  if(!running){running=true;t0=Date.now();endI=-1;$("tGo").textContent="■ עצור";$("tRes").classList.add("hide");$("rTime").querySelectorAll("span").forEach(s=>s.classList.remove("end"));tt=setInterval(clock,250)}
+  else{running=false;clearInterval(tt);secs=Math.max(1,(Date.now()-t0)/1000);clock();$("tGo").textContent="▶ התחלה חוזרת";$("tRes").classList.remove("hide");$("tMsg").textContent="לחצו על המילה האחרונה שנקראה. אם הגעתם לסוף, אפשר לדלג.";$("tOut").textContent=""}
+};
+$("rTime").onclick=e=>{const s=e.target.closest("span");if(!s||running)return;endI=+s.dataset.i;$("rTime").querySelectorAll("span").forEach(x=>x.classList.toggle("end",x===s))};
+$("tSave").onclick=()=>{
+  const n=endI<0?words().length:endI+1,er=Math.max(0,+$("err").value||0),w=Math.max(0,n-er),wpm=Math.round(w/(secs/60));
+  $("tOut").textContent=wpm+" מילים נכונות בדקה 🎉";
+  const h=S.get(hk(),[]);h.push({d:new Date().toLocaleDateString("he-IL"),g:grade,v:wpm});S.set(hk(),h.slice(-30))
+};
+// cards
+let q=[],done=0,total=0;
+function wordPool(){const hw=S.get(hardK(),[]);if(hw.length)return hw.slice();return (custom||(hasNiq()&&grade>1))?[...new Set(words().map(w=>w.replace(/[.,!?]/g,"")).filter(w=>w.length>1))]:D[grade].w.slice()}
+function buildCards(){q=wordPool().sort(()=>Math.random()-.5);total=q.length;done=0;showCard()}
+function showCard(){$("fw").textContent=q.length?q[0]:"כל הכבוד! סיימתם 🎉";$("fCount").textContent=`נקראו ${done} מתוך ${total}`}
+$('fOk').onclick=()=>{if(!q.length)return;const w=q.shift();S.set(hardK(),S.get(hardK(),[]).filter(x=>x!==w));done++;showCard()};
+$('fSay').onclick=()=>{try{const u=new SpeechSynthesisUtterance(q[0]||'');u.lang='he-IL';u.rate=.8;speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}};
+$("fAgain").onclick=()=>{if(q.length>1){q.push(q.shift());showCard()}};
+$("fNew").onclick=buildCards;
+// history
+function hist(){
+  const h=S.get(hk(),[]),el=$("hist");
+  if(!h.length){el.innerHTML='<p class="mute">עדיין אין מדידות. אחרי מדידה ראשונה תופיע כאן ההתקדמות.</p>';return}
+  const mx=Math.max(...h.map(x=>x.v),1);
+  el.innerHTML=who()+'<div class="hist">'+h.slice().reverse().slice(0,12).map(x=>`<span class="mute">${x.d} · כיתה ${GL[x.g-1]}</span><div><div class="bar" style="width:${Math.round(x.v/mx*100)}%"></div></div><b>${x.v}</b>`).join("")+"</div>"
+}
+$("hClr").onclick=()=>{S.set(hk(),[]);hist()};
+function norms(){$("norms").innerHTML="<tr><th>כיתה</th><th>יעד משוער</th></tr>"+GL.map((l,i)=>`<tr${i+1===grade?' style="background:var(--acc2)"':''}><td>${l}</td><td>${D[i+1].n}</td></tr>`).join("")}
+// settings
+function css(){document.documentElement.style.setProperty("--fs",$("fs").value+"px");document.documentElement.style.setProperty("--lh",$("lh").value/10)}
+$("fs").oninput=()=>{css();S.set("rf_fs",$("fs").value)};$("lh").oninput=()=>{css();S.set("rf_lh",$("lh").value)};
+document.querySelectorAll(".sw").forEach(b=>b.onclick=()=>{document.documentElement.style.setProperty("--rb",b.dataset.c);document.querySelectorAll(".sw").forEach(x=>x.classList.toggle("on",x===b));S.set("rf_bg",b.dataset.c)});
+$("cUse").onclick=()=>{const v=$("cust").value.trim();if(!v)return;saveTxt(v,'');custom=v;S.set("rf_custom",v);stopAll();refresh()};
+$("cOff").onclick=()=>{custom="";S.set("rf_custom","");$("cust").value="";stopAll();refresh()};
+function stopAll(){pStop();if(running){running=false;clearInterval(tt);$("tGo").textContent="▶ התחלה"}}
+function hk(){return "rf_hist_"+S.get("rf_name","")}
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+function who(){const n=S.get("rf_name","");return '<p class="mute">'+(n?"התלמיד/ה: <b>"+esc(n)+"</b>":"ללא שם (מכשיר משותף)")+"</p>"}
+$('sname').oninput=e=>{const v=e.target.value.trim();S.set('rf_name',v);regStu(v);hist()};
+$("bProj").onclick=()=>{document.body.classList.add("proj");try{document.documentElement.requestFullscreen()}catch(e){}};
+$("projX").onclick=()=>{document.body.classList.remove("proj");try{if(document.fullscreenElement)document.exitFullscreen()}catch(e){}};
+document.addEventListener("fullscreenchange",()=>{if(!document.fullscreenElement)document.body.classList.remove("proj")});
+$("bPrint").onclick=()=>{
+  const n=S.get("rf_name","");
+  $("printSheet").innerHTML='<h2 style="font-size:26px">שטף קריאה – כיתה '+GL[grade-1]+'</h2><p>שם: '+(esc(n)||"______________")+' &nbsp;&nbsp; תאריך: ______________</p><p style="font-size:28px;line-height:2.3;border:2px solid #000;border-radius:12px;padding:16px">'+esc(text())+'</p><p>מספר מילים בטקסט: <b>'+words().length+'</b></p><table style="font-size:20px"><tr><th></th><th>זמן</th><th>טעויות</th></tr><tr><td>קריאה 1</td><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>קריאה 2</td><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>קריאה 3</td><td>&nbsp;</td><td>&nbsp;</td></tr></table>';
+  try{window.print()}catch(e){}
+};
+$("sname").value=S.get("rf_name","");
+const tk=()=>custom?('c'+custom.length+'_'+[...custom].reduce((a,c)=>(a*31+c.charCodeAt(0))|0,7)):'g'+grade+(lvl==='h'?'h':'')+(tIdx?'_'+tIdx:'');
+const hardK=()=>'rf_hard_'+S.get('rf_name','')+'_'+(custom?'c':grade);
+function idb(){return new Promise((ok,no)=>{try{const r=indexedDB.open('rf',1);r.onupgradeneeded=()=>r.result.createObjectStore('a');r.onsuccess=()=>ok(r.result);r.onerror=()=>no()}catch(e){no()}})}
+async function aOp(m,k,v){try{const d=await idb();return await new Promise(ok=>{const s=d.transaction('a',m==='get'?'readonly':'readwrite').objectStore('a');const q=m==='get'?s.get(k):m==='put'?s.put(v,k):s.delete(k);q.onsuccess=()=>ok(q.result||null);q.onerror=()=>ok(null)})}catch(e){return null}}
+const aGet=k=>aOp('get',k),aPut=(k,v)=>aOp('put',k,v),aDel=k=>aOp('del',k);
+let rec=null,chunks=[],stream=null,au=null;
+async function recStart(){try{stream=await navigator.mediaDevices.getUserMedia({audio:true});rec=new MediaRecorder(stream);chunks=[];rec.ondataavailable=e=>chunks.push(e.data);rec.start();return true}catch(e){return false}}
+function recStop(){return new Promise(ok=>{if(!rec||rec.state==='inactive'){ok(null);return}rec.onstop=()=>{stream.getTracks().forEach(t=>t.stop());ok(new Blob(chunks,{type:rec.mimeType||'audio/webm'}))};rec.stop()})}
+function aStop(){if(au){au.pause();au=null}try{speechSynthesis.cancel()}catch(e){}}
+function playBlob(b){aStop();au=new Audio(URL.createObjectURL(b));au.play().catch(()=>{})}
+let gt=null,gi=-1;
+function gStop(){clearInterval(gt);gt=null}
+function gMark(){$('rSolo').querySelectorAll('span').forEach((s,i)=>{s.classList.toggle('cur',i===gi);s.classList.toggle('done',i<gi)})}
+function gRun(w){gStop();gi=-1;const n=words().length;gt=setInterval(()=>{gi++;if(gi>=n){gStop();gi=-1;gMark();return}gMark()},60000/w)}
+const _sa=stopAll;stopAll=()=>{_sa();gStop();aStop()};
+let ss=1,sSecs=0,sT0=0,sTm=null,sRead=false,sBlob=null,sRes=null;
+const SN=['שומעים','קוראים יחד','קוראים לבד','מסמנים','תוצאה'];
+let sSaved=false;
+function sayText(){try{const vs=speechSynthesis.getVoices();if(vs.length&&!vs.some(v=>/^(he|iw)/i.test(v.lang))){$('sHelp').textContent='במכשיר הזה אין קול בעברית, ולכן אי אפשר להשמיע. המורה יכולה להקליט קריאה לדוגמה במצב הורה/מורה.';gRun(Math.round(D[grade].n*.5));return true}
+ speechSynthesis.cancel();const tx=text(),u=new SpeechSynthesisUtterance(tx);u.lang='he-IL';u.rate=.8;const idx=[];let p=0;words().forEach(w=>{const k=tx.indexOf(w,p);idx.push(k);p=k+w.length});let got=false;
+ u.onboundary=e=>{got=true;let n=0;for(let i=0;i<idx.length;i++)if(idx[i]<=e.charIndex)n=i;gi=n;gMark()};u.onend=()=>{gStop();gi=-1;gMark()};
+ speechSynthesis.speak(u);setTimeout(()=>{if(!got&&speechSynthesis.speaking)gRun(Math.round(D[grade].n*.6))},1200);return true}catch(e){return false}}
+function back(){clearInterval(sTm);try{if(rec&&rec.state!=='inactive'){rec.stop();stream.getTracks().forEach(t=>t.stop())}}catch(e){}sRead=false;gStop();aStop();ss=Math.max(1,ss-1);if(ss<4)render($('rSolo'));soloRender()}
+function soloReset(){sSaved=false;sPaused=false;gStop();aStop();clearInterval(sTm);sRead=false;ss=1;render($('rSolo'));soloRender();modelUI()}
+$('rSolo').onclick=e=>{const s=e.target.closest('span');if(ss===4&&s)s.classList.toggle('hard')};
+async function soloRender(){
+ $('sSteps').innerHTML=SN.map((s,i)=>`<span class='sp ${i+1===ss?'on':i+1<ss?'ok':''}'>${i+1}. ${s}</span>`).join('');
+ const b=$('sBtns'),H=$('sHelp'),rd=$('rSolo');b.innerHTML='';if(ss<5)$('sRes').classList.add('hide');rd.classList.toggle('focus',ss<=2);rd.classList.toggle('tap',ss===4);
+ const bt=(t,f,m)=>{const x=document.createElement('button');x.className='btn'+(m?' main':'');x.textContent=t;x.onclick=f;b.appendChild(x);return x};
+ const go=n=>()=>{gStop();aStop();ss=n;soloRender()};
+ if(ss===1){const m=await aGet('model_'+tk());H.textContent=m?'מקשיבים לקריאה של המורה. המילה המודגשת זזה בקצב שלה.':'עדיין אין הקלטה של המורה לטקסט הזה, אז נשמע את הקול של המכשיר. מקשיבים ומסתכלים.';bt('▶ השמעה',()=>{if(m){playBlob(m.b);gRun(Math.max(15,Math.round(words().length/m.dur*60)))}else{if(!sayText())gRun(Math.max(20,Math.round(D[grade].n*.5)))}},1);bt('🔄 טקסט חדש',newText);bt('🖨 הדפסת הטקסט',printTextTab);bt('המשך ›',go(2))}
+ else if(ss===2){H.textContent='קוראים בקול יחד עם המנחה.';bt('▶ התחלה',()=>gRun(Math.round(D[grade].n*.7)),1);bt('🔄 טקסט חדש',newText);bt('🖨 הדפסת הטקסט',printTextTab);bt('המשך ›',go(3))}
+ else if(ss===3){H.textContent='עכשיו קוראים לבד, בקול. לוחצים התחלה, ובסוף לוחצים סיימתי.';const x=bt('🎙 התחלה',async()=>{if(!sRead){sSaved=false;const ok=await recStart();sRead=true;sT0=Date.now();sPaused=false;sPausedMs=0;if(pbG)pbG.style.display='';x.textContent='■ סיימתי';sTm=setInterval(()=>{const s=Math.floor(sEl()/1000);H.textContent=(sPaused?'בהפסקה… ':ok?'מקליטים… ':'מודדים זמן… ')+String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')},500)}else{clearInterval(sTm);if(sPaused)pauseRec();sRead=false;sSecs=Math.max(1,sEl()/1000);const bl=await recStop();if(bl){sBlob={b:bl,dur:sSecs};aPut('last_'+S.get('rf_name',''),sBlob)}else sBlob=null;ss=4;soloRender()}},1);const pb=bt('⏸ עצירה',pauseRec);pb.style.display='none';pbG=pb;bt('🔄 טקסט חדש',newText)}
+ else if(ss===4){H.textContent='לוחצים על המילים שהיו קשות. אם לא היו קשות, ממשיכים.';bt('סיימתי לסמן ›',()=>{finish();ss=5;soloRender()},1)}
+ else{H.textContent='';showRes(bt)}
+ if(ss>1){const k=bt('→ חזרה',back);b.prepend(k)}
+}
+function finish(){
+ const sp=[...$('rSolo').querySelectorAll('span')],n=sp.length,hw=sp.filter(s=>s.classList.contains('hard')).map(s=>s.textContent.replace(/[.,!?:;]/g,''));
+ const wpm=Math.round(Math.max(0,n-hw.length)/(sSecs/60)),key=hk(),h=S.get(key,[]);if(sSaved)h.pop();const prev=h.filter(x=>x.k===tk()).slice(-1)[0],today=new Date().toLocaleDateString('he-IL');sSaved=true;
+ h.push({d:today,g:grade,v:wpm,k:tk(),h:hw.length,n,s:Math.round(sSecs),ts:Date.now()});S.set(key,h.slice(-60));
+ S.set(hardK(),[...new Set([...S.get(hardK(),[]),...hw])]);
+ const same=h.filter(x=>x.k===tk()),reps=same.filter(x=>x.d===today).length,l2=same.slice(-2);let sug=null;
+ if(!custom&&l2.length===2&&l2.every(x=>x.v>=D[grade].n&&x.h/x.n<.05)&&grade<6)sug={g:grade+1,t:'שתי קריאות מצוינות ברצף! רוצים לנסות טקסט קשה יותר?'};
+ else if(!custom&&hw.length/n>=.2&&grade>1)sug={g:grade-1,t:'היו הרבה מילים קשות. רוצים לנסות טקסט קל יותר?'};
+ sRes={wpm,hw:hw.length,reps,prev:prev?prev.v:null,sug}}
+function showRes(bt){const r=sRes,el=$('sRes');el.classList.remove('hide');
+ const diff=r.prev==null?'':(r.wpm>=r.prev?` · שיפור של ${r.wpm-r.prev} מילים מהקריאה הקודמת 🎉`:` · בקריאה הקודמת היה ${r.prev}. כל קריאה מתרגלת!`);
+ const c="style='text-align:center'";
+ el.innerHTML=`<p class='big'>${r.wpm} מילים נכונות בדקה</p><p class='mute' ${c}>${r.reps<3?`קריאה ${r.reps} מתוך 3 לטקסט הזה. עוד קריאה משפרת את השטף!`:'כל הכבוד, סיימתם שלוש קריאות!'}${diff}</p>`+(r.hw?`<p class='mute' ${c}>${r.hw} מילים לאימון נשמרו בכרטיסיות.</p>`:'')+(S.get('rf_name','')?'':`<p class='mute' ${c}>כדי שהמורה תראה את ההתקדמות, הזינו שם בראש הדף.</p>`)+(r.sug?`<p ${c}><b>${r.sug.t}</b></p>`:'');
+ if(r.sug){bt('כן, נעבור',()=>{sRes=null;setGrade(r.sug.g)},1);bt('לא, נשארים',()=>{r.sug=null;soloRender()})}
+ if(sBlob)bt('🎧 האזנה לעצמי',()=>playBlob(sBlob.b));
+ bt('🔁 קריאה נוספת',()=>{render($('rSolo'));ss=3;soloRender()},!r.sug);bt('🔄 טקסט חדש',newText);
+ if(r.hw)bt('🃏 לתרגל מילים קשות',()=>{buildCards();showTab('vCards')});
+ bt('✔ סיום',()=>soloReset())}
+let mrec=false,mT0=0;
+async function modelUI(){const m=await aGet('model_'+tk());$('rModel').textContent=text();$('mStat').textContent=m?`יש הקלטה לטקסט הנוכחי (${Math.round(m.dur)} שניות)`:'אין הקלטה לטקסט הנוכחי';$('mPlay').disabled=!m;$('mDel').disabled=!m}
+$('mRec').onclick=async()=>{if(!mrec){if(!(await recStart())){$('mStat').textContent='אין גישה למיקרופון. צריך לאשר בדפדפן, והאתר חייב לרוץ בדומיין משלו.';return}mrec=true;mT0=Date.now();mPaused=false;mPausedMs=0;$('mPause').style.display='';$('mPause').textContent='⏸ השהיה';$('mRec').textContent='■ עצירה ושמירה'}else{mrec=false;if(mPaused)mTog();const dur=(Date.now()-mT0-mPausedMs)/1000,b=await recStop();$('mPause').style.display='none';$('mRec').textContent='🎙 הקלטה';if(b)await aPut('model_'+tk(),{b,dur});modelUI()}};
+$('mPlay').onclick=async()=>{const m=await aGet('model_'+tk());if(m)playBlob(m.b)};
+$('mDel').onclick=async()=>{await aDel('model_'+tk());modelUI()};
+function regStu(n){if(!n)return;const l=S.get('rf_students',[]);if(!l.includes(n)){l.push(n);S.set('rf_students',l)}}
+regStu(S.get('rf_name',''));
+function dash(){const l=S.get('rf_students',[]),el=$('dash'),now=Date.now();
+ if(!l.length){el.innerHTML='<p class=mute>עדיין אין נתונים. מזינים שם תלמיד/ה בראש הדף לפני התרגול.</p>';return}
+ el.innerHTML='<table><tr><th>תלמיד/ה</th><th>תרגולים השבוע</th><th>שטף אחרון</th><th>מגמה</th><th>התראה</th></tr>'+l.map(n=>{const h=S.get('rf_hist_'+n,[]),wk=h.filter(x=>now-(x.ts||0)<6048e5).length,la=h[h.length-1],l3=h.slice(-3),al=[];
+  if(!h.length)al.push('אין תרגול');else{if(now-(la.ts||0)>432e6)al.push('לא תרגל/ה 5 ימים');if(l3.length===3&&Math.max(l3[1].v,l3[2].v)<=l3[0].v)al.push('אין שיפור ב־3 תרגולות');if(l3.reduce((a,x)=>a+(x.h||0)/(x.n||1),0)/l3.length>.2)al.push('הרבה מילים קשות')}
+  const tr=l3.length>1?(l3[l3.length-1].v-l3[0].v):null;
+  return `<tr><td>${esc(n)}</td><td>${wk}</td><td>${la?la.v:'-'}</td><td>${tr==null?'-':tr>0?'▲ '+tr:tr<0?'▼ '+Math.abs(tr):'ללא שינוי'}</td><td>${al.length?'⚠ '+al.join(', '):'תקין'}</td></tr>`}).join('')+'</table>'}
+let tIdx=0;
+const ALT={1:['אִמָּא אוֹפָה עוּגָה. הַיֶּלֶד עוֹזֵר לָהּ. הָעוּגָה טְעִימָה.','הַכֶּלֶב רָץ בַּחָצֵר. הוּא רוֹאֶה כַּדּוּר. הַכֶּלֶב מְשַׂחֵק עִם יוֹסִי.'],
+2:['ביום חם הלכה משפחת כהן לבריכה. הילדים קפצו למים ושחו. אחר כך אכלו גלידה ליד הצל.','בכיתה שלנו יש ארנב קטן. כל יום מישהו נותן לו גזר ומים. הארנב אוהב שמלטפים אותו.'],
+3:['בשבת טיילנו בשביל לאורך הנחל. ראינו צפרדע ירוקה שקפצה אל המים. אבא אמר שאפשר לשמוע אותה בלילה, ואני חיכיתי בשקט להקשיב.','המורה הביאה לכיתה מיקרוסקופ. כל ילד הניח עלה קטן וגילה קווים דקים שלא רואים בעין. כולנו הופתענו כמה דברים נסתרים יש בטבע.'],
+4:['ליד הים נבנה מגדלור ישן שהאיר את הדרך לספינות. השומר עלה בכל ערב במדרגות הרבות והדליק את האור הגדול. בזכותו הגיעו המלחים בשלום אל הנמל.','כשהתחיל הגשם הראשון של השנה, הילדים רצו לחצר. הם קפצו בשלוליות והריחו את האדמה הרטובה. המורה חייכה ואמרה שזה הזמן הכי יפה בשנה.'],
+5:['בימי קדם שלחו אנשים הודעות בעזרת יונים. היונה למדה לחזור תמיד אל הבית שלה, גם מרחק של קילומטרים רבים. בזכות היכולת הזאת עברו מידע חשוב מעיר לעיר לפני שהומצא הטלפון.','הדבורים עובדות יחד בכוורת, וכל אחת מכירה את תפקידה. אחת מנקה, אחת שומרת ואחת יוצאת לאסוף צוף. כך נשמרת הקהילה הגדולה בלי שמישהו יפקד עליהן.'],
+6:['אנשים רבים חושבים שהשינה היא זמן מבוזבז, אבל מחקרים מראים שהמוח עובד גם בלילה. הוא מסדר זיכרונות, מוחק פרטים לא חשובים ומחזק את מה שלמדנו ביום. מי שישן מעט מתקשה להתרכז ולזכור.','כשהמציאו את האוניות הגדולות, הפכו הים והאוקיינוסים לדרך מסחר מרכזית. סוחרים הובילו תבלינים, בדים וכלי חרס ממדינה למדינה. ערי נמל פרחו, ותרבויות שונות למדו זו מזו.']};
+const LV={
+1:{e:[D[1].t,...ALT[1]],h:['בַּבֹּקֶר הַשֶּׁמֶשׁ זוֹרַחַת. הַצִּפּוֹרִים שָׁרוֹת עַל הָעֵץ. רוֹנִית לוֹבֶשֶׁת מְעִיל וְהוֹלֶכֶת לְבֵית הַסֵּפֶר. הִיא פּוֹגֶשֶׁת אֶת חֲבֵרָתָהּ וְשׁוֹאֶלֶת: מַה שְּׁלוֹמֵךְ?','בַּשַּׁבָּת אֲנַחְנוּ אוֹכְלִים אֲרוּחָה גְּדוֹלָה. סַבְתָּא מְבַשֶּׁלֶת מָרָק חַם וְאַבָּא חוֹתֵךְ סָלָט. כֻּלָּנוּ יוֹשְׁבִים סָבִיב הַשֻּׁלְחָן וּשְׂמֵחִים.']},
+2:{e:['דָּנָה הוֹלֶכֶת לַגַּן. הִיא רוֹאָה כֶּלֶב קָטָן. הַכֶּלֶב רָץ אֵלֶיהָ.','בַּכִּתָּה שֶׁלָּנוּ יֵשׁ אַרְנָב. הַיְלָדִים נוֹתְנִים לוֹ גֶּזֶר. הָאַרְנָב אוֹכֵל וּמִתְחַיֵּךְ.'],h:['בַּבֹּקֶר יָצְאָה נוֹעָה לַגִּנָּה. הִיא רָאֲתָה פֶּרַח צָהֹב לְיַד הַסַּפְסָל. נוֹעָה הִתְכּוֹפְפָה וְהֵרִיחָה אוֹתוֹ. פַּרְפָּר קָטָן עָף מֵעַל הַפֶּרַח וְחָזַר אֵלָיו שׁוּב וָשׁוּב.','בְּיוֹם חַם הָלְכָה מִשְׁפַּחַת כֹּהֵן לַבְּרֵכָה. הַיְלָדִים קָפְצוּ לַמַּיִם וְשָׂחוּ. אַחַר כָּךְ אָכְלוּ גְּלִידָה לְיַד הַצֵּל.']},
+3:{e:['בְּשַׁבָּת טִיַּלְנוּ לְיַד הַנַּחַל. רָאִינוּ צְפַרְדֵּעַ יְרֻקָּה. הִיא קָפְצָה אֶל הַמַּיִם וַאֲנַחְנוּ צָחַקְנוּ.','הַמּוֹרָה הֵבִיאָה לַכִּתָּה מִיקְרוֹסְקוֹפּ. כָּל יֶלֶד הִסְתַּכֵּל בְּעָלֶה קָטָן. כֻּלָּנוּ הִתְפַּלֵּאנוּ כַּמָּה קַוִּים דַּקִּים יֵשׁ בּוֹ.'],h:[D[3].t,...ALT[3]]},
+4:{e:[D[4].t,ALT[4][0]],h:[ALT[4][1],'בכל סתיו נודדות מיליוני ציפורים מאירופה אל אפריקה, ובדרך הן עוצרות בעמק החולה. החוקרים מסמנים אותן בטבעות קטנות כדי לעקוב אחרי המסע הארוך. הודות לכך אנחנו יודעים שציפור קטנה יכולה לעוף אלפי קילומטרים בלי לאבד את הכיוון.']},
+5:{e:[D[5].t,ALT[5][0]],h:[ALT[5][1],'בעיר העתיקה בירושלים יש שווקים צרים ומלאים בריחות של תבלינים וקפה. הסוחרים קוראים לעוברים ושבים, והילדים רצים בין הדוכנים בניסיון לא להתנגש. מי שמבקר שם פעם אחת, זוכר את הקולות והצבעים שנים רבות.']},
+6:{e:[D[6].t,ALT[6][0]],h:[ALT[6][1],'מדענים מצאו שהעננים אינם רק יפים אלא גם חשובים לאקלים כדור הארץ. הם מחזירים חלק מקרני השמש אל החלל ומקררים את הפלנטה, אך באותו זמן לוכדים חום ומונעים ממנו לברוח. האיזון העדין הזה קשה מאוד לחישוב, ולכן חוקרים עדיין מנסים להבין אותו.']}};
+let lvl=S.get('rf_lvl','e');
+const TX=()=>LV[grade][lvl];
+const hasNiq=()=>/[\u05B0-\u05C7]/.test(text());
+function setLvl(l){lvl=l;tIdx=0;S.set('rf_lvl',l);stopAll();refresh();if(tab==='vGames')gGo()}
+function lvUI(){$('lvE').classList.toggle('on',lvl==='e');$('lvH').classList.toggle('on',lvl==='h');$('lvNote').textContent=custom?'טקסט משלכם':hasNiq()?'הטקסט עם ניקוד':'הטקסט בלי ניקוד'}
+$('lvE').onclick=()=>setLvl('e');$('lvH').onclick=()=>setLvl('h');
+function newText(){try{if(rec&&rec.state!=='inactive'){rec.stop();stream.getTracks().forEach(t=>t.stop())}}catch(e){}custom='';S.set('rf_custom','');$('cust').value='';tIdx=(tIdx+1)%TX().length;stopAll();refresh();if(tab==='vGames')gGo()}
+$('pNew').onclick=newText;$('tNew').onclick=newText;$('mNew').onclick=newText;
+// games
+const CONF={'ר':'ד','ד':'ר','ו':'ז','ז':'ו','ב':'כ','כ':'ב','ה':'ח','ח':'ה','ס':'ם','ם':'ס','ע':'צ','צ':'ע','ג':'נ','נ':'ג','ק':'ך','ת':'ח','ל':'ו','י':'ו','ט':'מ','מ':'ט','פ':'ף','ש':'ס','א':'ע'};
+const U=w=>w.match(/[\u05D0-\u05EA][\u05B0-\u05C7]*/g)||[w],pick=a=>a[Math.floor(Math.random()*a.length)],shuf=a=>[...a].sort(()=>Math.random()-.5);
+const gpool=()=>[...new Set([...words().map(w=>w.replace(/[.,!?:;]/g,'')),...(hasNiq()?[]:D[grade].w)])].filter(w=>U(w).length>=3);
+function distract(w){const u=U(w),set=new Set();let t=0;while(set.size<3&&t++<60){const v=[...u],i=Math.floor(Math.random()*v.length);if(Math.random()<.5&&i<v.length-1){[v[i],v[i+1]]=[v[i+1],v[i]]}else{const c=CONF[v[i][0]];if(!c)continue;v[i]=c+v[i].slice(1)}const s=v.join('');if(s!==w)set.add(s)}return [...set]}
+let gm='find',gs={ok:0,n:0,st:0};
+const GN=[['find','מצאו את המילה','מצאו את המילה שזהה למילה הגדולה. שימו לב לאותיות דומות!'],['build','סדרו את המשפט','לחצו על המילים לפי הסדר כדי לבנות את המשפט.'],['fill','השלימו את האות','איזו אות חסרה במילה?'],['listen','שומעים ובוחרים','לחצו על הרמקול, האזינו ובחרו את המילה שנשמעה.'],['niq','ניקוד ושם','התאימו בין סימן הניקוד לשם שלו.']];
+function gTabs(){const g=$('gTabs');g.innerHTML='';GN.forEach(([k,l])=>{const b=document.createElement('button');b.className='chip'+(k===gm?' on':'');b.style.fontSize='1rem';b.textContent=l;b.onclick=()=>{gm=k;gs={ok:0,n:0,st:0};gTabs();gHead();gGo()};g.appendChild(b)});const n=document.createElement('button');n.className='btn';n.textContent='🔄 טקסט חדש';n.onclick=newText;g.appendChild(n);$('gHelp').textContent=GN.find(x=>x[0]===gm)[2]}
+function gHead(){$('gScore').textContent=gs.n?`נכון ${gs.ok} מתוך ${gs.n}`+(gs.st>=3?` · רצף ${gs.st} ⭐`:''):''}
+function gDone(ok){gs.n++;if(ok){gs.ok++;gs.st++}else gs.st=0;gHead()}
+const gch=(t,f)=>{const b=document.createElement('button');b.className='btn gch';b.textContent=t;b.onclick=()=>f(b);return b};
+function gRow(A){const r=document.createElement('div');r.className='row';r.style.cssText='margin-top:14px;justify-content:center';A.appendChild(r);return r}
+function gBox(A,t,sz){const d=document.createElement('div');d.className='flash';d.style.cssText='min-height:0;padding:22px;font-size:calc(var(--fs)*'+sz+')';d.textContent=t;A.appendChild(d);return d}
+function gGo(){({find:gFind,build:gBuild,fill:gFill,listen:gListen,niq:gNiq})[gm]()}
+function gFind(){const A=$('gArea');A.innerHTML='';const p=gpool();if(!p.length)return;const w=pick(p);let miss=false;gBox(A,w,1.6);const r=gRow(A);shuf([w,...distract(w)]).forEach(o=>r.appendChild(gch(o,b=>{if(b.disabled)return;if(o===w){b.classList.add('good');if(!miss)gDone(true);setTimeout(gGo,900)}else{b.classList.add('try');b.disabled=true;if(!miss){miss=true;gDone(false)}}})))}
+function gBuild(){const A=$('gArea');A.innerHTML='';const ss=text().split(/(?<=[.!?])\s+/).map(s=>s.trim().split(/\s+/)).filter(a=>a.length>=3&&a.length<=8);if(!ss.length){A.textContent='אין משפט מתאים בטקסט הזה. נסו טקסט חדש.';return}
+ const s=pick(ss);let nx=0,miss=false;const out=gBox(A,'',1);out.style.minHeight='70px';const r=gRow(A);
+ shuf(s.map((w,i)=>[w,i])).forEach(([w,i])=>r.appendChild(gch(w,b=>{if(b.disabled)return;if(i===nx){out.textContent=(out.textContent+' '+w).trim();b.disabled=true;b.style.opacity=.3;nx++;if(nx===s.length){if(!miss)gDone(true);setTimeout(gGo,1300)}}else{if(!miss){miss=true;gDone(false)}b.classList.add('try');setTimeout(()=>b.classList.remove('try'),600)}})))}
+function gFill(){const A=$('gArea');A.innerHTML='';const p=gpool();if(!p.length)return;const w=pick(p),u=U(w),i=1+Math.floor(Math.random()*(u.length-1)),ans=u[i][0];let miss=false;const box=gBox(A,u.map((x,k)=>k===i?'_':x).join(''),1.6);
+ const al='אבגדהוזחטיכלמנסעפצקרשת',o=new Set([ans]);if(CONF[ans])o.add(CONF[ans]);while(o.size<4)o.add(al[Math.floor(Math.random()*al.length)]);const r=gRow(A);
+ shuf([...o]).forEach(l=>r.appendChild(gch(l,b=>{if(b.disabled)return;if(l===ans){b.classList.add('good');box.textContent=w;if(!miss)gDone(true);setTimeout(gGo,1000)}else{b.classList.add('try');b.disabled=true;if(!miss){miss=true;gDone(false)}}})))}
+function gPick(A,right,opts){let miss=false;const r=gRow(A);opts.forEach(o=>r.appendChild(gch(o,b=>{if(b.disabled)return;if(o===right){b.classList.add('good');if(!miss)gDone(true);setTimeout(gGo,1000)}else{b.classList.add('try');b.disabled=true;if(!miss){miss=true;gDone(false)}}})))}
+function sayWord(w){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(w);u.lang='he-IL';u.rate=.75;speechSynthesis.speak(u)}catch(e){}}
+function noHe(){try{const v=speechSynthesis.getVoices();return v.length>0&&!v.some(x=>/^(he|iw)/i.test(x.lang))}catch(e){return true}}
+function gListen(){const A=$('gArea');A.innerHTML='';const p=gpool();if(!p.length)return;if(noHe()){A.textContent='במכשיר הזה אין קול בעברית, ולכן המשחק הזה לא יעבוד כאן. אפשר לנסות במכשיר אחר.';return}
+ const w=pick(p),sp=gch('🔊 השמעה',()=>sayWord(w));sp.classList.add('main');sp.style.fontSize='1.6rem';gRow(A).appendChild(sp);setTimeout(()=>sayWord(w),300);gPick(A,w,shuf([w,...distract(w)]))}
+const NQ=[['קמץ','\u05B8'],['פתח','\u05B7'],['צירה','\u05B5'],['סגול','\u05B6'],['חיריק','\u05B4'],['חולם','\u05B9'],['קובוץ','\u05BB'],['שווא','\u05B0']];
+function gNiq(){const A=$('gArea');A.innerHTML='';const q=pick(NQ),l=pick([...'בגדכלמנסרתשק']),o=shuf([q,...shuf(NQ.filter(x=>x!==q)).slice(0,3)]);
+ if(Math.random()<.5){gBox(A,l+q[1],2.4);gPick(A,q[0],o.map(x=>x[0]))}else{gBox(A,q[0],1.6);gPick(A,l+q[1],o.map(x=>l+x[1]))}}
+function buildRS(){
+ const n=S.get('rf_name',''),P=gpool(),tx=text(),pn=(a,k)=>shuf(a).slice(0,k),SS=tx.split(/(?<=[.!?])\s+/).map(s=>s.trim().split(/\s+/)).filter(a=>a.length>=3&&a.length<=8);
+ const sec=(t,b)=>`<div style='page-break-inside:avoid;margin:14px 0'><h3 style='font-size:20px;margin:0 0 6px'>${t}</h3>${b}</div>`,box=o=>`<span style='border:1.5px solid #000;border-radius:8px;padding:2px 12px;margin:0 6px'>${esc(o)}</span>`;
+ let h=`<h2 style='font-size:26px;margin:0'>דף תרגול שטף קריאה · כיתה ${GL[grade-1]} · ${lvl==='h'?'קשה':'קל'}</h2><p>שם: ${esc(n)||'______________'} &nbsp; תאריך: ______________</p>`;
+ h+=sec('1. קוראים את הטקסט שלוש פעמים',`<p style='font-size:26px;line-height:2.1;border:2px solid #000;border-radius:12px;padding:14px'>${esc(tx)}</p><table style='font-size:18px;width:100%'><tr><th></th><th>זמן</th><th>טעויות</th></tr>${[1,2,3].map(i=>`<tr><td>קריאה ${i}</td><td>&nbsp;</td><td>&nbsp;</td></tr>`).join('')}</table>`);
+ h+=sec('2. מקיפים את המילה הזהה',pn(P,5).map(w=>`<p style='font-size:24px;margin:8px 0'><b>${esc(w)}</b> &nbsp;→&nbsp; ${shuf([w,...distract(w)]).map(box).join('')}</p>`).join(''));
+ h+=sec('3. משלימים את האות החסרה',pn(P,6).map(w=>{const u=U(w),i=1+Math.floor(Math.random()*(u.length-1));return `<span style='font-size:26px;margin:0 18px;display:inline-block'>${esc(u.map((x,k)=>k===i?'___':x).join(''))}</span>`}).join(''));
+ h+=sec('4. מסדרים את המשפט וכותבים',pn(SS,2).map(a=>`<p style='font-size:22px;margin:8px 0'>${shuf(a).map(esc).join(' &nbsp;/&nbsp; ')}</p><p style='border-bottom:1.5px solid #000;height:36px;margin:0'>&nbsp;</p>`).join(''));
+ h+=sec('5. מעתיקים לשורה',pn(P,3).map(w=>`<p style='font-size:30px;margin:6px 0;color:#aaa'>${esc(w)}</p><p style='border-bottom:1.5px solid #000;border-top:1.5px dashed #888;height:48px;margin:0'>&nbsp;</p>`).join(''));
+ const q=pn(NQ,4),nm=shuf(q.map(x=>x[0]));
+ h+=sec('6. מחברים סימן ניקוד לשם שלו',`<table style='width:100%;font-size:28px'>${q.map((x,i)=>`<tr><td>ב${x[1]} &nbsp;○</td><td style='text-align:left'>○&nbsp; ${nm[i]}</td></tr>`).join('')}</table>`);
+ return h}
+let sPaused=false,sPauseAt=0,sPausedMs=0,pbG=null,mPaused=false,mPauseAt=0,mPausedMs=0;
+function sEl(){const n=Date.now();return n-sT0-sPausedMs-(sPaused?n-sPauseAt:0)}
+function pauseRec(){if(!sRead)return;const n=Date.now();if(!sPaused){sPaused=true;sPauseAt=n;try{if(rec&&rec.state==='recording')rec.pause()}catch(e){}if(pbG)pbG.textContent='▶ המשך'}else{sPaused=false;sPausedMs+=n-sPauseAt;try{if(rec&&rec.state==='paused')rec.resume()}catch(e){}if(pbG)pbG.textContent='⏸ עצירה'}}
+function mTog(){const n=Date.now();if(!mPaused){mPaused=true;mPauseAt=n;try{if(rec&&rec.state==='recording')rec.pause()}catch(e){}$('mPause').textContent='▶ המשך'}else{mPaused=false;mPausedMs+=n-mPauseAt;try{if(rec&&rec.state==='paused')rec.resume()}catch(e){}$('mPause').textContent='⏸ השהיה'}}
+$('mPause').onclick=()=>{if(mrec)mTog()};
+$('cpOpen').onclick=()=>{$('cpBox').classList.toggle('hide');$('cust2').value=custom;$('cust2').focus();$('cpGrade').value=String(grade);txtList()};
+$('cpX').onclick=()=>$('cpBox').classList.add('hide');
+const TL=()=>S.get('rf_texts',[]);
+function saveTxt(v,t){const l=TL();let e=l.find(x=>x.text===v);if(!e){e={id:Date.now(),title:t||v.split(/\s+/).slice(0,4).join(' ')+'…',text:v};l.unshift(e);S.set('rf_texts',l.slice(0,40))}else if(t){e.title=t;S.set('rf_texts',l)}return e}
+function useTxt(v){custom=v;S.set('rf_custom',v);$('cust').value=v;stopAll();refresh();if(tab==='vGames')gGo()}
+function txtList(){const el=$('cpList'),l=TL();el.innerHTML=l.length?'<b>הטקסטים ששמרתי:</b>':'<span class=mute>עדיין אין טקסטים שמורים.</span>';
+ l.forEach(e=>{const r=document.createElement('div');r.className='row';r.style.cssText='margin-top:6px;justify-content:space-between';const t=document.createElement('span');t.textContent=e.title+gl(e.id);const on=custom===e.text,b=document.createElement('button');b.className='btn'+(on?' main':'');b.textContent=on?'בשימוש':'השתמש';b.onclick=()=>{assign(e);$('cpBox').classList.add('hide')};const d=document.createElement('button');d.className='btn';d.textContent='🗑';d.setAttribute('aria-label','מחיקה');d.onclick=()=>{S.set('rf_texts',TL().filter(x=>x.id!==e.id));txtList()};r.append(t,b,d);el.appendChild(r)})}
+let cMode=S.get('rf_cm',0);
+$('cpGrade').innerHTML=GL.map((l,i)=>`<option value=${i+1}>כיתה ${l}</option>`).join('')+'<option value=0>כל הכיתות</option>';
+function mapG(g,id){const m=S.get('rf_gmap',{});m[g]=id;S.set('rf_gmap',m)}
+function unmap(){const m=S.get('rf_gmap',{});delete m[grade];S.set('rf_gmap',m);cMode=0;S.set('rf_cm',0)}
+function assign(e){mapG(grade,e.id);useTxt(e.text);cMode='g';S.set('rf_cm','g')}
+function gl(id){const m=S.get('rf_gmap',{}),a=Object.keys(m).filter(k=>m[k]===id).map(k=>GL[k-1]);return a.length?' · '+a.join(' '):''}
+function applyMap(){const m=S.get('rf_gmap',{}),id=m[grade],e=id&&TL().find(x=>x.id===id);if(e){custom=e.text;cMode='g'}else if(cMode==='g'){custom='';cMode=0}S.set('rf_custom',custom);S.set('rf_cm',cMode);$('cust').value=custom}
+if(custom)saveTxt(custom,'');
+$('cpUse').onclick=()=>{const v=$('cust2').value.trim();if(!v){$('cpMsg').textContent='לא הודבק טקסט.';return}const g=+$('cpGrade').value,e=saveTxt(v,$('cpTitle').value.trim());$('cpTitle').value='';if(g){mapG(g,e.id);if(g===grade)assign(e);else{$('cpMsg').textContent='הטקסט נשמר לכיתה '+GL[g-1]+'. הוא יופיע כשתבחרו בכיתה הזו.';txtList();return}}else{useTxt(v);cMode='all';S.set('rf_cm','all')}$('cpBox').classList.add('hide');txtList()};
+$('cpOff').onclick=()=>{unmap();custom='';S.set('rf_custom','');$('cust').value='';$('cust2').value='';stopAll();refresh();$('cpBox').classList.add('hide');if(tab==='vGames')gGo()};
+let niqOn=S.get('rf_niqon',true),nqC=S.get('rf_niq',{}),nqBusy=false;
+const NQR=/[\u05B0-\u05C7]/;
+function nqUI(){const b=$('nqBtn'),r=rawText(),has=NQR.test(r),c=nqC[th(r)];b.disabled=has||nqBusy;b.textContent=nqBusy?'מוסיפים ניקוד…':has?'✨ הטקסט כבר מנוקד':c?(niqOn?'✨ ניקוד: דולק':'✨ ניקוד: כבוי'):'✨ הוספת ניקוד לטקסט'}
+function nqMsg(s){$('nqMsg').textContent=s}
+async function nqClick(){
+ const r=rawText();if(NQR.test(r)||nqBusy)return;
+ if(nqC[th(r)]){niqOn=!niqOn;S.set('rf_niqon',niqOn);stopAll();refresh();if(tab==='vGames')gGo();return}
+ const sm=window.claude?await window.claude.use('sample'):null;
+ if(!sm){nqMsg('הוספת ניקוד אוטומטית זמינה רק כשהאתר נפתח מתוך Claude.');return}
+ nqBusy=true;nqMsg('');nqUI();
+ try{const res=await sm('הוסף ניקוד מלא ונכון בעברית לטקסט הבא, לילדים בבית ספר יסודי. שמור על המילים, סדר המילים וסימני הפיסוק בדיוק כפי שהם, ואל תוסיף או תשנה אותם. החזר רק את הטקסט המנוקד, בלי הסברים ובלי מירכאות.\n\n'+r,{modelTier:'default'});
+  const o=(res.text||'').trim();
+  if(nv(o).replace(/\s+/g,' ')!==r.replace(/\s+/g,' '))throw{code:'mismatch'};
+  nqC[th(r)]=o;S.set('rf_niq',nqC);niqOn=true;S.set('rf_niqon',true);nqMsg('הניקוד נוסף. כדאי לעבור עליו, כי הוא נוצר אוטומטית.');
+ }catch(e){nqMsg(e&&e.code==='mismatch'?'הניקוד שהתקבל שינה את הטקסט ולכן לא הוחל. אפשר לנסות שוב.':e&&e.code==='not_granted'?'לא ניתנה הרשאה להוספת ניקוד.':'לא הצלחנו להוסיף ניקוד כרגע.')}
+ nqBusy=false;stopAll();refresh();if(tab==='vGames')gGo()}
+$('nqBtn').onclick=nqClick;
+let wsMode='full';
+function textSheet(){return `<h2 style='font-size:26px;margin:0'>קריאה · כיתה ${GL[grade-1]} · ${lvl==='h'?'קשה':'קל'}</h2><p>שם: ${esc(S.get('rf_name',''))||'______________'} &nbsp; תאריך: ______________</p><p style='font-size:calc(var(--fs,28px)*1.25);line-height:2.4;border:2px solid #000;border-radius:14px;padding:20px;margin-top:14px'>${esc(text())}</p>`}
+let wsCache=null,wsKey=false;
+const nv=w=>w.replace(/[\u05B0-\u05C7]/g,'');
+const LB={n:['כֶּלֶב','שֻׁלְחָן','סֵפֶר','יַלְדָּה','גַּן','חָלָב','כַּדּוּר','עֵץ','מַיִם','בַּיִת'],
+ v:['רָץ','אוֹכֵל','שׁוֹתֶה','כּוֹתֵב','קוֹרֵא','יוֹשֵׁב','הוֹלֵךְ','מְשַׂחֵק'],
+ a:['גָּדוֹל','קָטָן','יָפֶה','חַם','קַר','מָתוֹק'],
+ pl:[['יֶלֶד','יְלָדִים'],['יַלְדָּה','יְלָדוֹת'],['סֵפֶר','סְפָרִים'],['כֶּלֶב','כְּלָבִים'],['שֻׁלְחָן','שֻׁלְחָנוֹת'],['חָתוּל','חֲתוּלִים']],
+ gn:[['תַּלְמִיד','תַּלְמִידָה'],['חָתוּל','חֲתוּלָה'],['מֶלֶךְ','מַלְכָּה'],['שַׂחְקָן','שַׂחְקָנִית'],['אָח','אָחוֹת'],['יֶלֶד','יַלְדָּה']],
+ op:[['גָּדוֹל','קָטָן'],['חַם','קַר'],['יוֹם','לַיְלָה'],['שָׂמֵחַ','עָצוּב'],['מָהִיר','אִטִּי'],['פָּתוּחַ','סָגוּר']]};
+const LN={ro:[['כותב','כתב'],['קורא','קרא'],['שומר','שמר'],['משחק','שחק'],['מלמד','למד'],['מכתב','כתב'],['תלמיד','למד'],['ספרייה','ספר'],['מגדל','גדל'],['מדריך','דרך']],
+ po:[['הכובע של הילד','הכובע שלו'],['המחברת של הילדה','המחברת שלה'],['הבית של אנחנו','הבית שלנו'],['התיק של אתה','התיק שלך'],['הציור של הם','הציור שלהם'],['הכלב של אני','הכלב שלי'],['הספרים של אתם','הספרים שלכם']],
+ te:[['כתב','עבר'],['כותב','הווה'],['יכתוב','עתיד'],['רצה','עבר'],['רץ','הווה'],['ירוץ','עתיד'],['אכל','עבר'],['אוכל','הווה'],['יאכל','עתיד'],['ישיר','עתיד'],['קורא','הווה']],
+ se:[['הילדה שותה מים','שותה','ילדה'],['הכלב רץ בגינה','רץ','כלב'],['המורה כותבת על הלוח','כותבת','מורה'],['אמא מבשלת מרק','מבשלת','אמא'],['התלמידים קוראים ספר','קוראים','תלמידים'],['הציפור שרה על העץ','שרה','ציפור']]};
+function buildLS(){
+ const V=grade<=2||(grade===3&&lvl==='e'),f=V?(x=>x):nv,k=lvl==='h'?2:0,c=k/2,pn=(a,m)=>shuf(a).slice(0,m),key=[];let i=0;
+ const sec=(t,b)=>`<div style='page-break-inside:avoid;margin:14px 0'><h3 style='font-size:20px;margin:0 0 6px'>${t}</h3>${b}</div>`,ln=`<span style='display:inline-block;border-bottom:1.5px solid #000;min-width:130px;height:30px;margin:0 8px'>&nbsp;</span>`,cell=w=>`<span style='font-size:26px'>${esc(f(w))}</span>`,row=(a,b)=>`<p style='margin:10px 0;font-size:22px'>${a} ${b}</p>`;
+ let h=`<h2 style='font-size:26px;margin:0'>דף עבודה · מיומנויות לשון · כיתה ${GL[grade-1]} · ${lvl==='h'?'קשה':'קל'}</h2><p>שם: ${esc(S.get('rf_name',''))||'______________'} &nbsp; תאריך: ______________</p>`;
+ const add=(t,b,a)=>{i++;h+=sec(i+'. '+t,b);key.push(i+'. '+a)};
+ const cl=shuf([...pn(LB.n,3+c).map(w=>[w,'שם עצם']),...pn(LB.v,3+c).map(w=>[w,'פועל']),...(grade>1?pn(LB.a,2+c).map(w=>[w,'שם תואר']):[])]),op=grade>1?['שם עצם','פועל','שם תואר']:['שם עצם','פועל'];
+ add('מסמנים: שם עצם, פועל או שם תואר?',cl.map(x=>row(cell(x[0]),'&nbsp;&nbsp;'+op.map(o=>'○ '+o).join(' &nbsp; '))).join(''),cl.map(x=>f(x[0])+' – '+x[1]).join(' · '));
+ if(!V){
+  const ro=pn(LN.ro,4+k);add('כותבים את השורש של המילה',ro.map(x=>row(cell(x[0]),'→ שורש: '+ln)).join(''),ro.map(x=>x[0]+' – '+x[1].split('').join('.')).join(' · '));
+  const po=pn(LN.po,4+c);add('שייכות: כותבים בצורה קצרה (שלי, שלך, שלו, שלה, שלנו, שלכם, שלהם)',po.map(x=>row(esc(x[0]),'→ '+ln)).join(''),po.map(x=>x[1]).join(' · '));
+  const te=pn(LN.te,5+k);add('מסמנים את זמן הפועל',te.map(x=>row(cell(x[0]),'&nbsp;&nbsp;○ עבר &nbsp; ○ הווה &nbsp; ○ עתיד')).join(''),te.map(x=>x[0]+' – '+x[1]).join(' · '));
+  const se=pn(LN.se,3);add('כותבים את הפועל ואת שם העצם מהמשפט',se.map(x=>row(esc(x[0]),'<br>פועל: '+ln+' שם עצם: '+ln)).join(''),se.map(x=>x[1]+' / '+x[2]).join(' · '));
+ }
+ if(grade<=4||V){
+  if(grade>1){const o=pn(LB.pl,4);add('כותבים בלשון רבים',o.map(x=>row(cell(x[0]),'→ '+ln)).join(''),o.map(x=>f(x[1])).join(' · '));
+   const g=pn(LB.gn,4);add('כותבים בלשון נקבה',g.map(x=>row(cell(x[0]),'→ '+ln)).join(''),g.map(x=>f(x[1])).join(' · '))}
+  const q=pn(LB.op,4),r=shuf(q.map(x=>x[1]));add('מחברים מילים הפוכות',q.map((x,j)=>row(cell(x[0]),'○ &nbsp;—&nbsp; ○ '+cell(r[j]))).join(''),q.map(x=>f(x[0])+' – '+f(x[1])).join(' · '));
+ }
+ if(grade===1){const w=pn(LB.n,3);add('מעתיקים לשורה',w.map(x=>`<p style='font-size:30px;margin:6px 0;color:#aaa'>${esc(x)}</p><p style='border-bottom:1.5px solid #000;border-top:1.5px dashed #888;height:48px;margin:0'>&nbsp;</p>`).join(''),'אין מפתח')}
+ wsCache={h,k:`<div style='page-break-before:always;margin-top:20px'><h3 style='font-size:22px'>מפתח תשובות למורה</h3>${key.map(x=>`<p style='font-size:18px;margin:6px 0'>${esc(x)}</p>`).join('')}</div>`}}
+function wsShow(){const e=$('wsView');if(wsMode==='text')e.innerHTML=textSheet();else if(wsMode==='read')e.innerHTML=buildRS();else{if(!wsCache)buildLS();e.innerHTML=wsCache.h+(wsKey?wsCache.k:'')}}
+$('wRead').onclick=()=>{wsMode='read';wsShow()};$('wKey').onclick=()=>{wsKey=!wsKey;wsMode='full';wsShow()};
+const printTextTab=()=>{wsMode='text';showTab('vWS')};
+$('pPrint').onclick=printTextTab;$('tPrint').onclick=printTextTab;
+$('wText').onclick=()=>{wsMode='text';wsShow()};$('wFull').onclick=()=>{wsMode='full';wsShow()};
+$('wPrint').onclick=()=>{$('printSheet').innerHTML=$('wsView').innerHTML;try{window.print()}catch(e){$('wMsg').textContent='ההדפסה נחסמה בתצוגה הזו. אפשר לפתוח את האתר בלשונית נפרדת או ללחוץ Ctrl+P.'}};
+$('wNew').onclick=()=>{wsCache=null;wsShow()};
+$('wWin').onclick=()=>{try{const w=window.open('','_blank');if(!w)throw 0;w.document.write(`<html dir='rtl' lang='he'><head><meta charset='utf-8'><title>דף עבודה</title></head><body style='font-family:Arial,sans-serif;padding:20px'>${$('wsView').innerHTML}</body></html>`);w.document.close();w.focus()}catch(e){$('wMsg').textContent='הדפדפן חסם פתיחת חלון חדש. אפשר להשתמש בכפתור ההדפסה.'}};
+$('bPrint').onclick=()=>{mode(false);showTab('vWS')};
+// init
+$("fs").value=S.get("rf_fs",28);$("lh").value=S.get("rf_lh",20);css();
+const bg=S.get("rf_bg","#fffdf5");document.documentElement.style.setProperty("--rb",bg);document.querySelectorAll(".sw").forEach(x=>x.classList.toggle("on",x.dataset.c===bg));
+$("cust").value=custom;
+setGrade(grade);showTab('vSolo');mode(S.get("rf_adult",false));
+</script>
+</body>
+</html>
